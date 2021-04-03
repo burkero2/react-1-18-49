@@ -9,7 +9,9 @@ export class SearchBar3 extends Component {
         }
     }
     handleChange = (event) => {
-        const name = event.target.value
+        const name = event.target.value;
+
+        
         const filteredGophers = gopherCards.filter(card => {
             return card.name.toLowerCase().includes(name)
         })

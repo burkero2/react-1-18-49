@@ -1,73 +1,79 @@
 import React, { Component } from 'react'
-import { gopherCards } from '../gophers'
 import Loader from './Loader'
+import {gopherCards} from '../gophers'
 
 export class SearchBar extends Component {
     constructor(props) {
-        super(props)
-        this.state = {
-            isLoading: true,
-            searches: 0,
-            gophers: []
-        }
+    super(props)
+    this.state = {
+        gophers: gopherCards,
+        isLoaded: false,
     }
-    componentDidMount() {
+}
+
+componentDidMount(){
+        console.log("Component Did Mount");
         setTimeout(() => {
+            console.log("Component Did Mount again");
             this.setState({
-                isLoading: false,
-                gophers: gopherCards
+                isLoaded: true,
             })
-        }, 2000)
+        }, 2000);
     }
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.gophers.length !== this.state.gophers.length){
-            this.setState(previousState => ({searches: previousState.searches + 1}))
-        }
-    }
-    handleChange = (event) => {
+
+
+handleChange = (event) => {
         const name = event.target.value
+        console.log(name);
         const filteredGophers = gopherCards.filter(card => {
             return card.name.toLowerCase().includes(name)
-            // return Object.values(card).some(item => item.toLowerCase().includes(input))
         })
         this.setState({
-            gophers: filteredGophers
+            gophers: filteredGophers,
+            
         })
     }
+
     render() {
         return (
             <div>
                 <h1>Gopher Search</h1>
-                <h4>so far searched {this.state.searches} times</h4>
-                <h4>gophers found: {this.state.gophers.length}</h4>
-                <form>
-                    <input onChange={(e) => this.handleChange(e)} type="text" />
-                </form>
+                    <form>
+                        <input
+                            onChange={(e) => this.handleChange(e)}
+                            type="text"
+                        />
+                    </form>
                 {
-                    this.state.isLoading
-                    ? <Loader />
-                    : (<table style={{margin: 'auto'}}>
+                    this.state.isLoaded ? (
+                        <table style={{margin: '20px auto'}}>
                             <thead>
-                                <tr><th>name</th><th>email</th><th>website</th><th>image</th></tr>
+                                <tr>
+                                    <th>name</th>
+                                    <th>email</th>
+                                    <th>website</th>
+                                    <th>image</th>
+                                </tr>
                             </thead>
-                            {
                                 <tbody>
                                     {
                                         this.state.gophers.map(item => {
-                                            const {name, email, website, image} = item;
+                                            
                                             return (
-                                                <tr key={image}>
-                                                    <td>{name}</td>
-                                                    <td>{email}</td>
-                                                    <td>{website}</td>
-                                                    <td><img alt={name} src={image} /></td>
+                                                <tr key = {item.name}>
+                                                    <td>{item.name}</td>
+                                                    <td>{item.email}</td>
+                                                    <td>{item.website}</td>
+                                                    <td><img src = {item.image} alt = {item.name}/></td>
                                                 </tr>
                                             )
                                         })
                                     }
+                                    
                                 </tbody>
-                            }
-                        </table>
+                            </table>     
+                    ):(
+                        <Loader />
                     )
                 }
             </div>
@@ -76,3 +82,4 @@ export class SearchBar extends Component {
 }
 
 export default SearchBar
+
